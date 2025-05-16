@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Catálogo de Carros</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body> 
+    <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <img src="multimedia/jdm.png" alt="Logo" class="logo">
+    </header>
+    <form id="formulario">
+  <h1>Gestor de Autos</h1>
+  <ul id="lista"></ul>
+
+  <h2>Agregar carro</h2><br>
+  
+    Marca: <input name="brand" required><br>
+    Modelo: <input name="model" required><br>
+    Año: <input name="year" required><br><br>
+    <button type="submit">Agregar</button>
+
+  </form>
+
+  <script>
+    const API = 'https://TU-PROYECTO.up.railway.app/cars';
+
+    async function cargarCarros() {
+      const res = await fetch(API);
+      const data = await res.json();
+      const lista = document.getElementById('lista');
+      lista.innerHTML = '';
+      data.forEach(c => {
+        const li = document.createElement('li');
+        li.textContent = `${c.brand} ${c.model} (${c.year})`;
+        lista.appendChild(li);
+      });
+    }
+
+    document.getElementById('formulario').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const data = {
+        brand: form.brand.value,
+        model: form.model.value,
+        year: parseInt(form.year.value)
+      };
+      await fetch(API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      form.reset();
+      cargarCarros();
+    });
+
+    cargarCarros();
+  </script>
+   
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>Curso: Conceptualización de servicios en la nube</p>
+      <p>Nombre: Jose David Custodio Vega</p>
+      <p>Código: 212029217</p>
+      <p>Correo: jose.custodio@udgvirtual.udg.mx</p>
+    </footer>
+
+</body>
+</html>
